@@ -31,9 +31,9 @@ async findOne(@Param('id') id: string): Promise<Usuario | null> {
 
 
 @Patch(':id')
-async update(@Param('id')id:string,@Body()UpdateUserDto:UpdateUserDto,): Promise<Usuario>{
+async update(@Param('id')id:string,@Body()updateUserDto:UpdateUserDto,): Promise<Usuario>{
     try{
-        return await this.usersService.update(id, UpdateUserDto);
+        return await this.usersService.update(id, updateUserDto);
     }catch(error){
         throw new NotFoundException('Usuario no existe')
     }
