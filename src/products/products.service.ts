@@ -33,7 +33,7 @@ export class ProductsService {
     return  this.prisma.producto.findMany()
   }
 
-  async findOne(id: string):Promise<Producto | null> {
+  async findOne(id: string):Promise<Producto> {
     const productoFound = await this.prisma.producto.findUnique({
       where:{id:id,},
     });
