@@ -5,9 +5,10 @@ import { PrismaModule } from './prisma.module';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { CategoryModule } from './category/category.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, ProductsModule, CategoryModule],//importacion Prisma Module del archivo con el mismo nombre prisma.module.ts
+  imports: [PrismaModule, UsersModule, ProductsModule, CategoryModule, PaymentModule],//importacion Prisma Module del archivo con el mismo nombre prisma.module.ts
   controllers: [AppController],
   providers: [AppService],
 })
