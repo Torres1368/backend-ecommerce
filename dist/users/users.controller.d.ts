@@ -8,6 +8,6 @@ export declare class UsersController {
     create(createUserDto: CreateUserDto): Promise<Usuario>;
     findAll(): Promise<Usuario[]>;
     findOne(id: string): Promise<Usuario | null>;
-    update(id: string, UpdateUserDto: UpdateUserDto): Promise<Usuario>;
+    update(id: string, updateUserDto: UpdateUserDto): Promise<Usuario>;
     remove(id: string): Promise<Usuario>;
 }

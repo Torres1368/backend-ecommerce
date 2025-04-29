@@ -1,9 +1,13 @@
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { PrismaService } from 'src/prisma.service';
+import { Categoria } from '@prisma/client';
 export declare class CategoryService {
-    create(createCategoryDto: CreateCategoryDto): string;
-    findAll(): string;
-    findOne(id: number): string;
-    update(id: number, updateCategoryDto: UpdateCategoryDto): string;
-    remove(id: number): string;
+    private prisma;
+    constructor(prisma: PrismaService);
+    create(createCategoryDto: CreateCategoryDto): Promise<Categoria>;
+    findAll(): Promise<Categoria[]>;
+    findOne(id: string): Promise<Categoria>;
+    update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<Categoria>;
+    remove(id: string): Promise<Categoria>;
 }

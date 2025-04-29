@@ -35,9 +35,9 @@ let UsersController = class UsersController {
         }
         return userEncontrado;
     }
-    async update(id, UpdateUserDto) {
+    async update(id, updateUserDto) {
         try {
-            return await this.usersService.update(id, UpdateUserDto);
+            return await this.usersService.update(id, updateUserDto);
         }
         catch (error) {
             throw new common_1.NotFoundException('Usuario no existe');
