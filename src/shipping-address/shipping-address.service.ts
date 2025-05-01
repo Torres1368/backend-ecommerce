@@ -66,5 +66,18 @@ export class ShippingAddressService {
     });
   }
   
-
+  async remove(id: string): Promise<DireccionEnvio> {
+    const direccionFound = await this.prisma.direccionEnvio.findUnique({
+      where: { id },
+    });
+  
+    if (!direccionFound) {
+      throw new NotFoundException(`La dirección de envío con ID ${id} no existe`);
+    }
+  
+    return this.prisma.direccionEnvio.delete({
+      where: { id },
+    });
+  }
+  
 }

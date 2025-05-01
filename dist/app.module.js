@@ -15,12 +15,16 @@ const users_module_1 = require("./users/users.module");
 const products_module_1 = require("./products/products.module");
 const category_module_1 = require("./category/category.module");
 const orders_module_1 = require("./orders/orders.module");
+const payment_module_1 = require("./payment/payment.module");
+const shipping_address_module_1 = require("./shipping-address/shipping-address.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule, users_module_1.UsersModule, products_module_1.ProductsModule, category_module_1.CategoryModule, orders_module_1.OrdersModule,],
+        imports: [prisma_module_1.PrismaModule, users_module_1.UsersModule, products_module_1.ProductsModule, category_module_1.CategoryModule, orders_module_1.OrdersModule, payment_module_1.PaymentModule,
+            shipping_address_module_1.ShippingAddressModule
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

@@ -9,4 +9,5 @@ export declare class ShippingAddressService {
     findAll(): Promise<DireccionEnvio[]>;
     findOne(id: string): Promise<DireccionEnvio>;
     update(id: string, updateShippingAddressDto: UpdateShippingAddressDto): Promise<DireccionEnvio>;
+    remove(id: string): Promise<DireccionEnvio>;
 }

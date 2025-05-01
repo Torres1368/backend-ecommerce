@@ -5,48 +5,48 @@ export declare class OrdersController {
     private readonly ordersService;
     constructor(ordersService: OrdersService);
     create(createOrderDto: CreateOrderDto): Promise<{
+        direccion: string;
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         usuarioId: string;
         estado: import(".prisma/client").$Enums.EstadoPedido;
         total: import("@prisma/client/runtime/library").Decimal;
-        direccion: string;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     findAll(): Promise<{
+        direccion: string;
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         usuarioId: string;
         estado: import(".prisma/client").$Enums.EstadoPedido;
         total: import("@prisma/client/runtime/library").Decimal;
-        direccion: string;
-        createdAt: Date;
-        updatedAt: Date;
     }[]>;
     findOne(id: string): Promise<{
+        direccion: string;
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         usuarioId: string;
         estado: import(".prisma/client").$Enums.EstadoPedido;
         total: import("@prisma/client/runtime/library").Decimal;
-        direccion: string;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     update(id: string, updateOrderDto: UpdateOrderDto): Promise<{
+        direccion: string;
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         usuarioId: string;
         estado: import(".prisma/client").$Enums.EstadoPedido;
         total: import("@prisma/client/runtime/library").Decimal;
-        direccion: string;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     remove(id: string): Promise<{
+        direccion: string;
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         usuarioId: string;
         estado: import(".prisma/client").$Enums.EstadoPedido;
         total: import("@prisma/client/runtime/library").Decimal;
-        direccion: string;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
 }

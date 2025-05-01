@@ -40,5 +40,13 @@ export declare class ShippingAddressController {
         pais: string;
         createdAt: Date;
     }>;
-    remove(id: string): any;
+    remove(id: string): Promise<{
+        id: string;
+        usuarioId: string;
+        direccion: string;
+        ciudad: string;
+        codigoPostal: string;
+        pais: string;
+        createdAt: Date;
+    }>;
 }

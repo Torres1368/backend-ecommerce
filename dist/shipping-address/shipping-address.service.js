@@ -66,6 +66,17 @@ let ShippingAddressService = class ShippingAddressService {
             data: updateShippingAddressDto,
         });
     }
+    async remove(id) {
+        const direccionFound = await this.prisma.direccionEnvio.findUnique({
+            where: { id },
+        });
+        if (!direccionFound) {
+            throw new common_1.NotFoundException(`La dirección de envío con ID ${id} no existe`);
+        }
+        return this.prisma.direccionEnvio.delete({
+            where: { id },
+        });
+    }
 };
 exports.ShippingAddressService = ShippingAddressService;
 exports.ShippingAddressService = ShippingAddressService = __decorate([
