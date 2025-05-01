@@ -93,6 +93,14 @@ model Pedido{
   updatedAt     DateTime  @updatedAt 
 }
 
+enum  EstadoPedido{
+  PENDIENTE
+  PROCESANDO
+  ENVIADO
+  ENTREGADO
+  CANCELADO
+}
+
 model  PedidoProducto{
   id            String    @id @default(uuid())
   pedido        Pedido    @relation(fields:[pedidoId], references:[id] )
@@ -104,13 +112,6 @@ model  PedidoProducto{
   createdAt     DateTime  @default(now())
 }
 
-enum  EstadoPedido{
-  PENDIENTE
-  PROCESANDO
-  ENVIADO
-  ENTREGADO
-  CANCELADO
-}
 
 model Pago{
   id           String  @id @default(uuid())

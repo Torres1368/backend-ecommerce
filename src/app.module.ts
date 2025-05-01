@@ -8,7 +8,7 @@ import { CategoryModule } from './category/category.module';
 import { OrdersModule } from './orders/orders.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, ProductsModule, CategoryModule, OrdersModule],//importacion Prisma Module del archivo con el mismo nombre prisma.module.ts
+  imports: [PrismaModule, UsersModule, ProductsModule, CategoryModule, OrdersModule,],//importacion Prisma Module del archivo con el mismo nombre prisma.module.ts
   controllers: [AppController],
   providers: [AppService],
 })
