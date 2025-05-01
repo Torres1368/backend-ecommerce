@@ -1,26 +1,70 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateShippingAddressDto } from './dto/create-shipping-address.dto';
 import { UpdateShippingAddressDto } from './dto/update-shipping-address.dto';
+import { DireccionEnvio, Prisma } from '@prisma/client';
+import { PrismaService } from 'src/prisma.service';
+import { ShippingAddress } from './entities/shipping-address.entity';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class ShippingAddressService {
-  create(createShippingAddressDto: CreateShippingAddressDto) {
-    return 'This action adds a new shippingAddress';
+  constructor(private prisma:PrismaService){}
+  async create(createShippingAddressDto: CreateShippingAddressDto): Promise<DireccionEnvio> {
+    try {
+      return await this.prisma.direccionEnvio.create({
+        data: createShippingAddressDto,
+      });
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        // Ejemplo: Clave foránea no válida (usuarioId inexistente)
+        if (error.code === 'P2003') {
+          throw new BadRequestException('El usuario especificado no existe');
+        }
+      }
+      throw new InternalServerErrorException('Error al crear la dirección de envío');
+    }
   }
 
-  findAll() {
-    return `This action returns all shippingAddress`;
+
+  async findAll():Promise<DireccionEnvio[]> {
+    return await this.prisma.direccionEnvio.findMany({
+      include: {
+        usuario: true,
+      }
+    })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} shippingAddress`;
+  async findOne(id: string):Promise<DireccionEnvio> {
+    const direccion = await this.prisma.direccionEnvio.findUnique({
+      where: {
+        id
+      },
+      include: {
+        usuario: true,
+      }
+    });
+    if (!direccion) {
+      throw new NotFoundException(`La dirección de envío con ID ${id} no existe`);
+    }
+    return direccion;
   }
 
-  update(id: number, updateShippingAddressDto: UpdateShippingAddressDto) {
-    return `This action updates a #${id} shippingAddress`;
-  }
 
-  remove(id: number) {
-    return `This action removes a #${id} shippingAddress`;
+
+  async update(id: string, updateShippingAddressDto: UpdateShippingAddressDto): Promise<DireccionEnvio> {
+    const direccion = await this.prisma.direccionEnvio.findUnique({
+      where: { id },
+    });
+  
+    if (!direccion) {
+      throw new NotFoundException(`La dirección de envío con ID ${id} no existe`);
+    }
+  
+    return await this.prisma.direccionEnvio.update({
+      where: { id },
+      data: updateShippingAddressDto,
+    });
   }
+  
+
 }

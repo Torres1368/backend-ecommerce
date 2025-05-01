@@ -33,7 +33,7 @@ export declare class ProductsController {
         precio: import("@prisma/client/runtime/library").Decimal;
         stock: number;
         categoriaId: string;
-    } | null>;
+    }>;
     update(id: string, updateProductDto: UpdateProductDto): Promise<{
         nombre: string;
         id: string;
