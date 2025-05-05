@@ -13,6 +13,7 @@ exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma.service");
 const library_1 = require("@prisma/client/runtime/library");
+const bcrypt = require("bcrypt");
 let UsersService = class UsersService {
     prisma;
     constructor(prisma) {
@@ -20,14 +21,18 @@ let UsersService = class UsersService {
     }
     async create(createUserDto) {
         try {
+            const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
             return await this.prisma.usuario.create({
-                data: createUserDto,
+                data: {
+                    ...createUserDto,
+                    password: hashedPassword,
+                },
             });
         }
         catch (error) {
             if (error instanceof library_1.PrismaClientKnownRequestError) {
-                if (error.code === "P2002") {
-                    throw new common_1.ConflictException(`Producto con el correo ${createUserDto.email} ya existe`);
+                if (error.code === 'P2002') {
+                    throw new common_1.ConflictException(`Usuario con el correo ${createUserDto.email} ya existe`);
                 }
             }
             throw error;

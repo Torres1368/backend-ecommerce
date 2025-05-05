@@ -1,4 +1,5 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'; // 👈 Importar esto
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Rol } from '@prisma/client';
@@ -23,11 +24,21 @@ export class AuthService {
 
   async register(nombre: string, email: string, password: string, rol: Rol) {
     const hash = await bcrypt.hash(password, 10);
-    const user = await this.prisma.usuario.create({
-      data: { nombre, email, password: hash, rol },
-    });
-    const { password: _, ...rest } = user;
-    return rest;
+    try {
+      const user = await this.prisma.usuario.create({
+        data: { nombre, email, password: hash, rol },
+      });
+      const { password: _, ...rest } = user;
+      return rest;
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new BadRequestException(`Ya existe un usuario con el ${error.meta?.target?.[0]}`);
+      }
+      throw error;
+    }
   }
 
   async login(email: string, pass: string) {

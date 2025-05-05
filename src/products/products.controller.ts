@@ -1,22 +1,36 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport'; // <-- Importante
 
+import { FilesInterceptor } from '@nestjs/platform-express';
+import {UseInterceptors,UploadedFiles,BadRequestException,} from '@nestjs/common';
 
 @ApiTags ('productos')
+@ApiBearerAuth() // Para Swagger (token en header)
+@UseGuards(AuthGuard('jwt')) // Para NestJS (proteger rutas con JWT)
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
-
-
   @Post()
-  @ApiOperation({summary: 'Crear un producto'})
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Crear un producto' })
   @ApiResponse({ status: 201, description: 'Producto creado correctamente' })
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  @UseInterceptors(FilesInterceptor('imagenes', 5))
+  async create(
+    @UploadedFiles() files: any[],
+    @Body() createProductDto: CreateProductDto,
+  ) {
+    if (!files || files.length === 0) {
+      throw new BadRequestException('Debes subir al menos una imagen');
+    }
+    const imagenes = files.map(f => (f as any).path as string);
+    return this.productsService.create({ ...createProductDto, imagenes });
   }
+  
+  
 
   @Get()
   @ApiOperation({ summary: 'Obtener todos los productos' })

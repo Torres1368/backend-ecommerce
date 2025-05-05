@@ -4,22 +4,27 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Usuario } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // Actualizado para aceptar el DTO CreateUserDto
   async create(createUserDto: CreateUserDto): Promise<Usuario> {
-    try{
+    try {
+      // Cifrar la contraseña antes de guardarla
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
       return await this.prisma.usuario.create({
-        data: createUserDto, // Utiliza el DTO directamente
+        data: {
+          ...createUserDto, // Los demás datos del usuario
+          password: hashedPassword, // Agregar la contraseña cifrada
+        },
       });
-    }catch(error){
-      if(error instanceof PrismaClientKnownRequestError){
-        if(error.code === "P2002"){
-          throw new ConflictException(`Producto con el correo ${createUserDto.email} ya existe`);
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          throw new ConflictException(`Usuario con el correo ${createUserDto.email} ya existe`);
         }
       }
       throw error;

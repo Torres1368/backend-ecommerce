@@ -17,13 +17,17 @@ const category_module_1 = require("./category/category.module");
 const orders_module_1 = require("./orders/orders.module");
 const payment_module_1 = require("./payment/payment.module");
 const shipping_address_module_1 = require("./shipping-address/shipping-address.module");
+const passport_1 = require("@nestjs/passport");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [prisma_module_1.PrismaModule, users_module_1.UsersModule, products_module_1.ProductsModule, category_module_1.CategoryModule, orders_module_1.OrdersModule, payment_module_1.PaymentModule,
-            shipping_address_module_1.ShippingAddressModule
+            shipping_address_module_1.ShippingAddressModule,
+            passport_1.PassportModule,
+            auth_module_1.AuthModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

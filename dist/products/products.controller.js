@@ -18,6 +18,7 @@ const products_service_1 = require("./products.service");
 const create_product_dto_1 = require("./dto/create-product.dto");
 const update_product_dto_1 = require("./dto/update-product.dto");
 const swagger_1 = require("@nestjs/swagger");
+const passport_1 = require("@nestjs/passport");
 let ProductsController = class ProductsController {
     productsService;
     constructor(productsService) {
@@ -94,6 +95,8 @@ __decorate([
 ], ProductsController.prototype, "remove", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, swagger_1.ApiTags)('productos'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.Controller)('products'),
     __metadata("design:paramtypes", [products_service_1.ProductsService])
 ], ProductsController);

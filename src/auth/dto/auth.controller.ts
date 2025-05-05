@@ -6,7 +6,9 @@ import { Rol } from '@prisma/client';
 import { RefreshDto } from './refresh.dto';
 import { LoginDto } from './login.dto';
 import { AuthService } from '../auth.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

@@ -1,6 +1,6 @@
 
 import { Type } from "class-transformer";
-import { IsArray, IsInt, IsNumber, IsOptional, IsString, IsUUID, Min,  } from "class-validator";
+import { IsArray, IsInt, IsNumber, IsOptional, IsString, IsUUID, Min, ArrayMaxSize } from "class-validator";
 
 export class CreateProductDto {
     @IsString()
@@ -27,6 +27,7 @@ export class CreateProductDto {
   // Campo opcional para las imágenes, como un array de URLs
     @IsOptional()
     @IsArray()
+    @ArrayMaxSize(5)
     @IsString({ each: true })
     readonly imagenes?: string[];
 }
