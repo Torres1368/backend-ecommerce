@@ -4,7 +4,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export declare class ProductsController {
     private readonly productsService;
     constructor(productsService: ProductsService);
-    create(createProductDto: CreateProductDto): Promise<{
+    create(files: any[], createProductDto: CreateProductDto): Promise<{
         nombre: string;
         id: string;
         createdAt: Date;

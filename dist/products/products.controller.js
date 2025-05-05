@@ -18,14 +18,19 @@ const products_service_1 = require("./products.service");
 const create_product_dto_1 = require("./dto/create-product.dto");
 const update_product_dto_1 = require("./dto/update-product.dto");
 const swagger_1 = require("@nestjs/swagger");
-const passport_1 = require("@nestjs/passport");
+const platform_express_1 = require("@nestjs/platform-express");
+const common_2 = require("@nestjs/common");
 let ProductsController = class ProductsController {
     productsService;
     constructor(productsService) {
         this.productsService = productsService;
     }
-    create(createProductDto) {
-        return this.productsService.create(createProductDto);
+    async create(files, createProductDto) {
+        if (!files || files.length === 0) {
+            throw new common_2.BadRequestException('Debes subir al menos una imagen');
+        }
+        const imagenes = files.map(f => f.path);
+        return this.productsService.create({ ...createProductDto, imagenes });
     }
     findAll() {
         return this.productsService.findAll();
@@ -43,12 +48,15 @@ let ProductsController = class ProductsController {
 exports.ProductsController = ProductsController;
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
     (0, swagger_1.ApiOperation)({ summary: 'Crear un producto' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Producto creado correctamente' }),
-    __param(0, (0, common_1.Body)()),
+    (0, common_2.UseInterceptors)((0, platform_express_1.FilesInterceptor)('imagenes', 5)),
+    __param(0, (0, common_2.UploadedFiles)()),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_product_dto_1.CreateProductDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Array, create_product_dto_1.CreateProductDto]),
+    __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
@@ -95,8 +103,6 @@ __decorate([
 ], ProductsController.prototype, "remove", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, swagger_1.ApiTags)('productos'),
-    (0, swagger_1.ApiBearerAuth)(),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.Controller)('products'),
     __metadata("design:paramtypes", [products_service_1.ProductsService])
 ], ProductsController);

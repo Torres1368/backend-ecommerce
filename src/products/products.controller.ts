@@ -9,8 +9,8 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import {UseInterceptors,UploadedFiles,BadRequestException,} from '@nestjs/common';
 
 @ApiTags ('productos')
-@ApiBearerAuth() // Para Swagger (token en header)
-@UseGuards(AuthGuard('jwt')) // Para NestJS (proteger rutas con JWT)
+//@ApiBearerAuth() // Para Swagger (token en header)
+//@UseGuards(AuthGuard('jwt')) // Para NestJS (proteger rutas con JWT)
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
