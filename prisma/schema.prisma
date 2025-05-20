@@ -1,0 +1,148 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//Modelos
+
+model Usuario{ //falta tienda
+  id          String  @id @default(uuid())
+  nombre      String
+  email       String  @unique
+  password    String
+  rol         Rol
+  direccion   String? 
+  telefono    String?
+  direccionesEnvio  DireccionEnvio[]//relacion inversa
+  pedidos     Pedido[] //relacion inversa
+  //tienda    ?Tienda?  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+}
+
+enum Rol{
+  ADMIN
+  CLIENTE
+  VENDEDOR
+}
+
+//model Tienda {  //este modelo se planea usar en un futuro , de momento no
+//  id            String     @id @default(uuid())
+//  nombre        String
+//  descripcion   String?
+//  propietario   Usuario    @relation(fields: [propietarioId], references: [id])
+//  propietarioId String
+//  productos     Producto[]
+//  createdAt     DateTime   @default(now())
+//  updatedAt     DateTime   @updatedAt
+//}
+
+model Producto{
+  id            String    @id @default(uuid())
+  nombre        String
+  descripcion   String?
+  precio        Decimal   @db.Decimal(10,2)
+  stock         Int       @default(0)
+  categoria     Categoria @relation(fields:[categoriaId], references:[id])
+  categoriaId   String
+  //tienda        Tienda?   @relation(fields:[tiendaId], references:[id])
+  //tiendaId      String?
+  imagenes      Imagen[]
+  pedidos       PedidoProducto[]
+  destacado     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Categoria{
+  id            String    @id @default(uuid())
+  nombre        String
+  productos     Producto[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Imagen{
+  id            String    @id @default(uuid())
+  url           String
+  producto      Producto  @relation(fields:[productoId],references:[id], onDelete: Cascade)
+  productoId    String
+  createdAt     DateTime  @default(now())
+}
+
+model Pedido{
+  id            String    @id @default(uuid())
+  usuario       Usuario   @relation(fields:[usuarioId], references:[id])
+  usuarioId     String
+  estado        EstadoPedido  
+  total         Decimal
+  direccion     String
+  productos     PedidoProducto[]
+  pago          Pago?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt 
+}
+
+enum  EstadoPedido{
+  PENDIENTE
+  PROCESANDO
+  ENVIADO
+  ENTREGADO
+  CANCELADO
+}
+
+model  PedidoProducto{
+  id            String    @id @default(uuid())
+  pedido        Pedido    @relation(fields:[pedidoId], references:[id] )
+  pedidoId      String
+  producto      Producto  @relation(fields:[productoId], references:[id])
+  productoId    String
+  cantidad      Int
+  precioUnitario  Decimal
+  createdAt     DateTime  @default(now())
+}
+
+
+model Pago{
+  id           String  @id @default(uuid())
+  pedido       Pedido  @relation(fields:[pedidoId], references:[id])
+  pedidoId     String  @unique // Agregar @unique para indicar que la relación es uno a uno
+  metodo       MetodoPago
+  estado       EstadoPago
+  monto        Decimal
+  createdAt    DateTime @default(now())
+}
+
+enum MetodoPago{
+  TARJETA
+  PAYPAL
+  TRANSFERENCIA
+}
+
+enum EstadoPago{
+  PENDIENTE
+  COMPLETADO
+  FALLIDO
+}
+
+model DireccionEnvio{
+  id          String  @id @default(uuid())
+  usuario     Usuario @relation(fields:[usuarioId], references: [id])
+  usuarioId   String
+  direccion   String
+  ciudad      String
+  codigoPostal  String
+  pais        String
+  createdAt    DateTime @default(now())
+}
